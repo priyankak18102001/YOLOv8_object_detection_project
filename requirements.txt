@@ -1,0 +1,12 @@
+streamlit
+ultralytics
+torch
+torchvision
+opencv-python
+pandas
+matplotlib
+seaborn
+numpy
+imageio
+imageio-ffmpeg
+ffmpeg-python

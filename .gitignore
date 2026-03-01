@@ -1,0 +1,10 @@
+venv/
+runs/
+uploads/
+TestVideo/
+VehiclesDetectionDataset/
+*.pt
+*.mp4
+*.png
+__pycache__/
+.ipynb_checkpoints/
