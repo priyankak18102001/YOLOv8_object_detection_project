@@ -181,14 +181,15 @@ elif page == "Model Evaluation":
 
         st.info("Running validation on dataset... Please wait.")
 
+        # Run validation
         metrics = model.val(data="data.yaml")
 
         st.success("Validation Complete")
 
-        # ===============================
-        # OVERALL METRICS
-        # ===============================
-        st.subheader(" Overall Performance")
+        # =====================================
+        # 📊 OVERALL METRICS
+        # =====================================
+        st.subheader("📊 Overall Performance")
 
         col1, col2, col3, col4 = st.columns(4)
 
@@ -197,10 +198,10 @@ elif page == "Model Evaluation":
         col3.metric("Precision", f"{metrics.box.mp:.3f}")
         col4.metric("Recall", f"{metrics.box.mr:.3f}")
 
-        # ===============================
-        # PER-CLASS METRICS TABLE
-        # ===============================
-        st.subheader(" Per-Class Metrics")
+        # =====================================
+        # 📋 PER-CLASS METRICS
+        # =====================================
+        st.subheader("📋 Per-Class Metrics")
 
         class_names = ['Ambulance', 'Bus', 'Car', 'Motorcycle', 'Truck']
 
@@ -212,29 +213,56 @@ elif page == "Model Evaluation":
             "mAP@0.5:0.95": metrics.box.ap
         })
 
-        # Add F1 Score
+        # F1 Score (safe calculation)
         df_metrics["F1 Score"] = 2 * (
             df_metrics["Precision"] * df_metrics["Recall"]
         ) / (
-            df_metrics["Precision"] + df_metrics["Recall"]
+            df_metrics["Precision"] + df_metrics["Recall"] + 1e-6
         )
 
-        st.dataframe(df_metrics)
+        # Sort by mAP@0.5
+        df_metrics_sorted = df_metrics.sort_values("mAP@0.5", ascending=False)
 
-        # ===============================
-        # CONFUSION MATRIX
-        # ===============================
-        st.subheader(" Confusion Matrix")
+        st.dataframe(
+            df_metrics_sorted.style
+            .background_gradient(subset=["mAP@0.5"], cmap="Greens")
+            .background_gradient(subset=["F1 Score"], cmap="Blues")
+        )
+
+        # =====================================
+        # 🧠 BRIEF ANALYSIS
+        # =====================================
+        st.subheader("🧠 Brief Analysis")
+
+        best_class = df_metrics.loc[df_metrics["mAP@0.5"].idxmax(), "Class"]
+        worst_class = df_metrics.loc[df_metrics["mAP@0.5"].idxmin(), "Class"]
+
+        st.write(f"""
+        The model achieves an overall **mAP@0.5 of {metrics.box.map50:.2f}**, 
+        indicating good object detection performance.
+
+        The best performing class is **{best_class}**, while the weakest class is **{worst_class}**.
+
+        A Precision of **{metrics.box.mp:.2f}** shows reliable predictions,
+        while Recall of **{metrics.box.mr:.2f}** indicates moderate detection coverage.
+        """)
+
+        # =====================================
+        # 🔎 CONFUSION MATRIX
+        # =====================================
+        st.subheader("🔎 Confusion Matrix")
 
         cm = metrics.confusion_matrix.matrix
 
-        fig, ax = plt.subplots(figsize=(8,6))
+        # Some YOLO versions add background class
+        if cm.shape[0] > len(class_names):
+            cm = cm[:len(class_names), :len(class_names)]
 
+        fig, ax = plt.subplots(figsize=(8,6))
         im = ax.imshow(cm, cmap="Blues")
 
         ax.set_xticks(range(len(class_names)))
         ax.set_yticks(range(len(class_names)))
-
         ax.set_xticklabels(class_names, rotation=45)
         ax.set_yticklabels(class_names)
 
@@ -249,15 +277,96 @@ elif page == "Model Evaluation":
 
         st.pyplot(fig)
 
-        # ===============================
-        # mAP PER CLASS BAR CHART
-        # ===============================
-        st.subheader("mAP@0.5 per Class")
+        # =====================================
+        # 📊 mAP PER CLASS BAR CHART
+        # =====================================
+        st.subheader("📊 mAP@0.5 per Class")
 
         fig2, ax2 = plt.subplots()
-        ax2.bar(df_metrics["Class"], df_metrics["mAP@0.5"])
+        ax2.bar(df_metrics_sorted["Class"], df_metrics_sorted["mAP@0.5"])
         ax2.set_ylabel("mAP@0.5")
         ax2.set_title("mAP@0.5 per Class")
         plt.xticks(rotation=45)
-
         st.pyplot(fig2)
+
+        # =====================================
+        # 📈 PR & F1 CURVES
+        # =====================================
+        import glob
+        import os
+
+        val_folders = sorted(glob.glob("runs/detect/val*"))
+
+        if val_folders:
+            latest_val = val_folders[-1]
+
+            pr_curve = os.path.join(latest_val, "PR_curve.png")
+            f1_curve = os.path.join(latest_val, "F1_curve.png")
+
+            if os.path.exists(pr_curve):
+                st.subheader("📈 Precision-Recall Curve")
+                st.image(pr_curve)
+
+            if os.path.exists(f1_curve):
+                st.subheader("📈 F1 Score Curve")
+                st.image(f1_curve)
+
+        # =====================================
+        # 📥 DOWNLOAD REPORT
+        # =====================================
+        st.subheader("📥 Download Evaluation Report")
+
+        csv = df_metrics_sorted.to_csv(index=False).encode("utf-8")
+
+        st.download_button(
+            "⬇ Download Evaluation Report (CSV)",
+            csv,
+            "evaluation_report.csv",
+            "text/csv"
+        )
+
+        # =====================================
+        # 🖼 SAMPLE PREDICTIONS
+        # =====================================
+        st.subheader("🖼 Sample Image  Predictions")
+
+        predict_folders = sorted(glob.glob("runs/detect/val*"))
+
+        if predict_folders:
+            latest_predict = predict_folders[-1]
+
+            image_files = glob.glob(os.path.join(latest_val, "*.jpg"))
+            image_files += glob.glob(os.path.join(latest_val, "*.png"))
+
+            if image_files:
+                cols = st.columns(3)
+
+                for i, img_path in enumerate(image_files[:6]):
+                    cols[i % 3].image(img_path, use_container_width=True)
+            else:
+                st.warning("No annotated validation images found.")
+        else:
+            st.warning("Run detection first to generate prediction images.")
+
+        st.subheader("Sample Vedio prediction")
+        predict_folders = sorted(glob.glob("runs/detect/predict*"))
+
+        if predict_folders:
+            latest_predict = predict_folders[-1]
+
+            
+            # Show annotated video if exists
+            video_files = [
+                f for f in os.listdir(latest_predict)
+                if f.endswith((".mp4", ".avi"))
+            ]
+
+            if video_files:
+                st.subheader("🎬 Annotated Video")
+                video_path = os.path.join(latest_predict, video_files[0])
+                with open(video_path, "rb") as v:
+                    st.video(v.read())
+
+        else:
+            st.warning("Run detection first to generate prediction images.")
+

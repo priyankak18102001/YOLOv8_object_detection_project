@@ -1,31 +1,35 @@
-# Vehicle Detection System using YOLOv8
+# 🚗 Vehicle Detection System using YOLOv8
 
-A complete Computer Vision project for vehicle detection, analytics, and model evaluation using YOLOv8 and Streamlit.
+A complete end-to-end Computer Vision project for **vehicle detection, analytics, and model evaluation** using **YOLOv8** and **Streamlit**.
 
 ---
 
-##  Project Overview
+## 📌 Project Overview
 
-This project performs:
+This project implements an intelligent vehicle detection system capable of:
 
 - Real-time vehicle detection
-- Vehicle classification (5 classes)
+- Multi-class vehicle classification
 - Video processing with FFmpeg
-- Analytics dashboard
-- Model evaluation metrics
+- Interactive analytics dashboard
+- Model performance evaluation
 - Confusion matrix visualization
 
 Built using:
-- YOLOv8 (Ultralytics)
-- Streamlit
-- PyTorch
-- OpenCV
-- Matplotlib
-- Pandas
+
+- **YOLOv8 (Ultralytics)**
+- **PyTorch**
+- **Streamlit**
+- **OpenCV**
+- **Matplotlib**
+- **Pandas**
+- **FFmpeg**
 
 ---
 
 ## 🚘 Classes Detected
+
+The model detects 5 vehicle categories:
 
 - Ambulance
 - Bus
@@ -35,121 +39,144 @@ Built using:
 
 ---
 
-## 📊 Features
+## 📊 Application Features
 
-### 🔹 Detection Page
+### 🔹 1. Detection Page
 - Upload traffic video
-- Adjustable confidence threshold
-- Browser-compatible processed video
-- Vehicle counting
+- Adjustable confidence threshold slider
+- Browser-compatible processed output
+- Automatic vehicle counting
+- Annotated video output
 
-### 🔹 Analytics Dashboard
+---
+
+### 🔹 2. Analytics Dashboard
 - Total vehicle count
-- Most frequent vehicle
-- Bar chart visualization
+- Most frequent vehicle type
+- Interactive bar chart
 - Pie chart distribution
-- Download CSV report
+- Downloadable CSV report
 
-### 🔹 Model Evaluation
+---
+
+### 🔹 3. Model Evaluation Dashboard
 - mAP@0.5
 - mAP@0.5:0.95
 - Precision
 - Recall
 - F1 Score
-- Per-class metrics
-- Confusion matrix
-- mAP per class graph
+- Per-class performance table
+- Confusion matrix visualization
+- mAP per class bar chart
+- PR Curve & F1 Curve
+- Downloadable evaluation report
 
 ---
 
-## Project Structure
+## 🗂 Project Structure
 Computer_Vision_Project/
 │
-├── app.py
-├── best.pt
-├── data.yaml
-├── requirements.txt
+├── app.py # Streamlit application
+├── train.py # Model training script
+├── inference.py # Inference script (image/video/webcam)
+├── best.pt # Trained model weights
+├── data.yaml # Dataset configuration
+├── requirements.txt # Dependencies
 ├── README.md
 │
 ├── VehiclesDetectionDataset/
 │ ├── train/
 │ ├── valid/
-│ ├── test/
+│ └── test/
 │
-└── uploads/
+├── uploads/ # Uploaded videos
+└── runs/ # YOLO output folders
 
 
 ---
 
-## ⚙ Installation
+## ⚙ Installation Guide
 
-### Clone the repository
-git clone <your-repo-link>
-cd Computer_Vision_Project 
+### 1️⃣ Clone the Repository
 
-
-###  Create virtual environment
+```bash
+git clone https://github.com/your-username/your-repo-name.git
+cd Computer_Vision_Project
 
 python -m venv venv
-venv\Scripts\activate 
+venv\Scripts\activate   # Windows
 
+pip install -r requirements.txt
 
-###  Install dependencies
-
-pip install -r requirements.txt 
-
-
-###  Install FFmpeg (Required)
+4️⃣ Install FFmpeg (Required for Video Processing)
 
 Download from:
-https://www.gyan.dev/ffmpeg/builds/
 
-Add to system PATH.
+👉 https://www.gyan.dev/ffmpeg/builds/
 
-Verify installation: ffmpeg -version
+Add FFmpeg to your system PATH.
 
-##  Run the App
-streamlit run app.py 
+Verify installation:
+ffmpeg -version
 
+Run the Streamlit Application
+streamlit run app.py
 
----
+Model Training (Optional)
 
-##  Evaluation Metrics Explained
+To retrain the model:
 
-- **mAP@0.5** → Detection accuracy at IoU threshold 0.5  
-- **mAP@0.5:0.95** → Stricter average detection accuracy  
-- **Precision** → Correct detections among predicted detections  
-- **Recall** → Correct detections among actual objects  
-- **F1 Score** → Balance between Precision and Recall  
+python train.py
 
----
+Trained weights will be saved in:
 
-##  Technologies Used
+runs/detect/train*/weights/best.pt
+📈 Evaluation Metrics Explained
+Metric	Description
+mAP@0.5	Detection accuracy at IoU threshold 0.5
+mAP@0.5:0.95	Stricter averaged detection accuracy
+Precision	Correct detections among predicted detections
+Recall	Correct detections among actual objects
+F1 Score	Harmonic mean of Precision and Recall
+📦 Project Deliverables
 
-- YOLOv8
-- PyTorch
-- Streamlit
-- OpenCV
-- FFmpeg
-- Matplotlib
-- Pandas
+✅ Training Script
 
----
+✅ Inference Script (Image + Video)
 
-##  Future Improvements
+✅ Dataset YAML
 
-- Real-time webcam detection
-- Speed estimation
-- Vehicle tracking
-- Deployment on Streamlit Cloud
-- Model comparison
+✅ Trained Weights (best.pt)
 
----
+✅ Evaluation Report
 
-##  Author
+✅ Confusion Matrix
 
-Priyanka Kumawat  
-Computer Vision & Data Science Enthusiast 
+✅ Annotated Images
 
+✅ Annotated Video
 
+✅ Interactive Streamlit Dashboard
 
+🚀 Future Improvements
+
+Real-time webcam detection
+
+Vehicle speed estimation
+
+Multi-object tracking
+
+Deployment on Streamlit Cloud
+
+Model comparison (YOLOv8n vs YOLOv8s)
+
+REST API integration
+
+👩‍💻 Author
+
+Priyanka Kumawat
+Computer Vision & Data Science Enthusiast
+
+⭐ If You Like This Project
+
+Give it a ⭐ on GitHub!
