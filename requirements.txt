@@ -8,5 +8,6 @@ matplotlib
 seaborn
 numpy
 imageio
+pillow
 imageio-ffmpeg
 ffmpeg-python
