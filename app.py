@@ -75,8 +75,8 @@ elif page == "Detection":
                     source=video_path,
                     save=True,
                     conf=confidence,
-                    imgsz=640,
-                    vid_stride=2,
+                    imgsz=320,
+                    vid_stride=10,
                     stream=True
                ))
             
@@ -120,10 +120,7 @@ elif page == "Detection":
 
                 st.success("Detection Complete")
 
-                with open(final_video, "rb") as f:
-                    video_bytes = f.read()
-
-                st.video(video_bytes)
+                st.video(final_video)
 
                 # -------- VEHICLE COUNTING --------
                 class_counts = {}
