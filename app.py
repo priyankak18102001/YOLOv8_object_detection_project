@@ -19,10 +19,9 @@ page = st.sidebar.radio("Go to", ["Home", "Detection", "Analytics","Model Evalua
 # -----------------------------
 @st.cache_resource
 def load_model():
+
     return YOLO("yolov8n.pt")   # safer for deployment
-
 model = load_model()
-
 # -----------------------------
 # HOME PAGE
 # -----------------------------
@@ -74,14 +73,13 @@ elif page == "Detection":
             
 
             results = model.predict(
-                     source=video_path,
-                     save=True,
-                     conf=confidence,
-                     imgsz=224,          # smaller image size (FASTER)
-                     vid_stride=3,       # process every 3rd frame (VERY IMPORTANT)
-                     device="cpu",
-                     verbose=False
-                 )
+                    source=video_path,
+                    save=True,
+                    conf=confidence,
+                    imgsz=224,
+                    vid_stride=3,
+                    stream=True
+               )
             
             save_dir = results[0].save_dir
 
@@ -104,7 +102,14 @@ elif page == "Detection":
                     final_video
                 ]
 
+
                 subprocess.run(ffmpeg_command)
+
+                try:
+                   subprocess.run(ffmpeg_command, check=True)
+                except:
+                     final_video = original_video
+
 
                 st.success("Detection Complete")
 
@@ -190,8 +195,11 @@ elif page == "Model Evaluation":
         st.info("Running validation on dataset... Please wait.")
 
         # Run validation
-        metrics = model.val(data="data.yaml")
-
+        if os.path.exists("data.yaml"):
+            metrics = model.val(data="data.yaml")
+        else:
+            st.error("Dataset not available in deployment environment.")
+            st.stop()
         st.success("Validation Complete")
 
         # =====================================
@@ -343,8 +351,8 @@ elif page == "Model Evaluation":
         if predict_folders:
             latest_predict = predict_folders[-1]
 
-            image_files = glob.glob(os.path.join(latest_val, "*.jpg"))
-            image_files += glob.glob(os.path.join(latest_val, "*.png"))
+            image_files = glob.glob(os.path.join(latest_predict, "*.jpg"))
+            image_files += glob.glob(os.path.join(latest_predict, "*.png"))
 
             if image_files:
                 cols = st.columns(3)
