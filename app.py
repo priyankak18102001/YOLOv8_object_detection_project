@@ -102,13 +102,22 @@ elif page == "Detection":
                     "-acodec", "aac",
                     final_video
                 ]
+                import subprocess
+
+                process = subprocess.run(
+                ffmpeg_command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+                )
+
+                if process.returncode != 0:
+                   st.error("FFmpeg conversion failed")
+                   final_video = original_video
+
+                import time
+                time.sleep(2)   
 
 
-                try:
-                   subprocess.run(ffmpeg_command, check=True)
-                except:
-                     st.error("Video conversion failed")
-                     final_video = original_video
 
 
                 st.success("Detection Complete")
