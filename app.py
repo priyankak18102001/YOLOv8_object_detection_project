@@ -196,15 +196,15 @@ elif page == "Model Evaluation":
 
     if st.button("Run Validation"):
 
-        st.info("Running validation on dataset... Please wait.")
-
-        # Run validation
-        if os.path.exists("data.yaml"):
-            metrics = model.val(data="data.yaml")
+        if not os.path.exists("data.yaml"):
+            st.warning("⚠️ Dataset not available in deployed app.")
+            st.info("Model validation can only run locally because the dataset is not uploaded.")
         else:
-            st.error("Dataset not available in deployment environment.")
-            st.stop()
-        st.success("Validation Complete")
+            st.info("Running validation on dataset... Please wait.")
+
+            metrics = model.val(data="data.yaml")
+
+            st.success("Validation Complete")
 
         # =====================================
         # 📊 OVERALL METRICS
