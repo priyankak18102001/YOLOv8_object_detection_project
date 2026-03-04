@@ -100,7 +100,7 @@ Computer_Vision_Project/
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
+git clone https://github.com/priyankak18102001/YOLOv8_object_detection_project
 cd Computer_Vision_Project
 
 python -m venv venv
