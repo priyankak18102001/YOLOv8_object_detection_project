@@ -196,7 +196,9 @@ elif page == "Model Evaluation":
 
     if st.button("Run Validation"):
 
-        if not os.path.exists("data.yaml"):
+        dataset_path = "VehiclesDetectionDataset"
+
+        if not os.path.exists(dataset_path):
             st.warning("⚠️ Dataset not available in deployed app.")
             st.info("Model validation can only run locally because the dataset is not uploaded.")
         else:
