@@ -19,7 +19,7 @@ page = st.sidebar.radio("Go to", ["Home", "Detection", "Analytics","Model Evalua
 # -----------------------------
 @st.cache_resource
 def load_model():
-    return YOLO("best.pt")
+    return YOLO("yolov8n.pt")   # safer for deployment
 
 model = load_model()
 
