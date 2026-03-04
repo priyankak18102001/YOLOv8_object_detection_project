@@ -72,14 +72,15 @@ elif page == "Detection":
             st.info("Processing video... Please wait!")
             
 
-            results = model.predict(
+            results = list(model.predict(
                     source=video_path,
                     save=True,
                     conf=confidence,
                     imgsz=224,
                     vid_stride=3,
-                    stream=True
-               )
+                    stream=True,
+                    half = True
+               ))
             
             save_dir = results[0].save_dir
 
