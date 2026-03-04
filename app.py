@@ -104,11 +104,10 @@ elif page == "Detection":
                 ]
 
 
-                subprocess.run(ffmpeg_command)
-
                 try:
                    subprocess.run(ffmpeg_command, check=True)
                 except:
+                     st.error("Video conversion failed")
                      final_video = original_video
 
 
