@@ -20,7 +20,7 @@ page = st.sidebar.radio("Go to", ["Home", "Detection", "Analytics","Model Evalua
 @st.cache_resource
 def load_model():
 
-    return YOLO("yolov8n.pt")   # safer for deployment
+    return YOLO("best.pt")   # safer for deployment
 model = load_model()
 # -----------------------------
 # HOME PAGE
@@ -50,8 +50,7 @@ elif page == "Detection":
     st.title("🎥 Upload & Detect Vehicles")
 
     uploaded_file = st.file_uploader("Upload Traffic Video", type=["mp4", "avi", "mov"])
-    confidence = st.slider("Detection Confidence", 0.1, 1.0, 0.5, 0.05)
-
+    confidence = st.slider("Detection Confidence", 0.1, 1.0, 0.25, 0.05)
     
     if uploaded_file is not None:
 
@@ -76,10 +75,9 @@ elif page == "Detection":
                     source=video_path,
                     save=True,
                     conf=confidence,
-                    imgsz=224,
-                    vid_stride=3,
-                    stream=True,
-                    half = True
+                    imgsz=640,
+                    vid_stride=2,
+                    stream=True
                ))
             
             save_dir = results[0].save_dir
