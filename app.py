@@ -200,12 +200,13 @@ elif page == "Model Evaluation":
 
         try:
             metrics = model.val(data="data.yaml")
+            st.success("Validation Complete")
+
         except Exception:
 
             st.warning("⚠️ Dataset not available in deployed environment.")
             st.info("Model validation can only run locally because the dataset is not uploaded.")
-            st.success("Validation Complete")
-            
+
             st.subheader("📊 Precomputed Model Performance")
 
             col1, col2, col3, col4 = st.columns(4)
@@ -214,7 +215,7 @@ elif page == "Model Evaluation":
             col3.metric("Precision", "0.737")
             col4.metric("Recall", "0.548")
 
-        st.success("Validation Complete")
+            st.stop()
 
         # =====================================
         # 📊 OVERALL METRICS
@@ -243,14 +244,12 @@ elif page == "Model Evaluation":
             "mAP@0.5:0.95": metrics.box.ap
         })
 
-        # F1 Score (safe calculation)
         df_metrics["F1 Score"] = 2 * (
             df_metrics["Precision"] * df_metrics["Recall"]
         ) / (
             df_metrics["Precision"] + df_metrics["Recall"] + 1e-6
         )
 
-        # Sort by mAP@0.5
         df_metrics_sorted = df_metrics.sort_values("mAP@0.5", ascending=False)
 
         st.dataframe(
@@ -284,12 +283,11 @@ elif page == "Model Evaluation":
 
         cm = metrics.confusion_matrix.matrix
 
-        # Some YOLO versions add background class
         if cm.shape[0] > len(class_names):
             cm = cm[:len(class_names), :len(class_names)]
 
         fig, ax = plt.subplots(figsize=(8,6))
-        im = ax.imshow(cm, cmap="Blues")
+        ax.imshow(cm, cmap="Blues")
 
         ax.set_xticks(range(len(class_names)))
         ax.set_yticks(range(len(class_names)))
@@ -317,13 +315,13 @@ elif page == "Model Evaluation":
         ax2.set_ylabel("mAP@0.5")
         ax2.set_title("mAP@0.5 per Class")
         plt.xticks(rotation=45)
+
         st.pyplot(fig2)
 
         # =====================================
         # 📈 PR & F1 CURVES
         # =====================================
         import glob
-        import os
 
         val_folders = sorted(glob.glob("runs/detect/val*"))
 
@@ -356,11 +354,11 @@ elif page == "Model Evaluation":
         )
 
         # =====================================
-        # 🖼 SAMPLE PREDICTIONS
+        # 🖼 SAMPLE IMAGE PREDICTIONS
         # =====================================
-        st.subheader("🖼 Sample Image  Predictions")
+        st.subheader("🖼 Sample Image Predictions")
 
-        predict_folders = sorted(glob.glob("runs/detect/val*"))
+        predict_folders = sorted(glob.glob("runs/detect/predict*"))
 
         if predict_folders:
             latest_predict = predict_folders[-1]
@@ -373,30 +371,19 @@ elif page == "Model Evaluation":
 
                 for i, img_path in enumerate(image_files[:6]):
                     cols[i % 3].image(img_path, use_container_width=True)
-            else:
-                st.warning("No annotated validation images found.")
-        else:
-            st.warning("Run detection first to generate prediction images.")
 
-        st.subheader("Sample Vedio prediction")
-        predict_folders = sorted(glob.glob("runs/detect/predict*"))
+        # =====================================
+        # 🎬 SAMPLE VIDEO
+        # =====================================
+        st.subheader("🎬 Sample Video Prediction")
 
         if predict_folders:
-            latest_predict = predict_folders[-1]
-
-            
-            # Show annotated video if exists
             video_files = [
                 f for f in os.listdir(latest_predict)
                 if f.endswith((".mp4", ".avi"))
             ]
 
             if video_files:
-                st.subheader("🎬 Annotated Video")
                 video_path = os.path.join(latest_predict, video_files[0])
                 with open(video_path, "rb") as v:
                     st.video(v.read())
-
-        else:
-            st.warning("Run detection first to generate prediction images.")
-
