@@ -196,17 +196,22 @@ elif page == "Model Evaluation":
 
     if st.button("Run Validation"):
 
-        dataset_path = "VehiclesDetectionDataset"
+        st.info("Running validation on dataset... Please wait.")
 
-        if not os.path.exists(dataset_path):
-            st.warning("⚠️ Dataset not available in deployed app.")
-            st.info("Model validation can only run locally because the dataset is not uploaded.")
-        else:
-            st.info("Running validation on dataset... Please wait.")
-
+        try:
             metrics = model.val(data="data.yaml")
 
             st.success("Validation Complete")
+
+            col1, col2, col3, col4 = st.columns(4)
+            col1.metric("mAP@0.5", f"{metrics.box.map50:.3f}")
+            col2.metric("mAP@0.5:0.95", f"{metrics.box.map:.3f}")
+            col3.metric("Precision", f"{metrics.box.mp:.3f}")
+            col4.metric("Recall", f"{metrics.box.mr:.3f}")
+
+        except Exception:
+            st.warning("⚠️ Dataset not available in deployed environment.")
+            st.info("Model validation can only run locally because the dataset is not uploaded.")
 
         # =====================================
         # 📊 OVERALL METRICS
