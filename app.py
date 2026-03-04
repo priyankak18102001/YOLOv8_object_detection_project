@@ -76,7 +76,7 @@ elif page == "Detection":
                     save=True,
                     conf=confidence,
                     imgsz=320,
-                    vid_stride=10,
+                    vid_stride=2,
                     stream=True
                ))
             
