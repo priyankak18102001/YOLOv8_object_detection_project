@@ -217,7 +217,13 @@ elif page == "Model Evaluation":
         st.info("Running validation on dataset... Please wait.")
 
         try:
-            metrics = model.val(data="VehiclesDetectionDataset/dataset.yaml")
+            import os
+
+            dataset_yaml = os.path.abspath("VehiclesDetectionDataset/dataset.yaml")
+
+            st.write("Using dataset:", dataset_yaml)
+
+            metrics = model.val(data=dataset_yaml)
             st.success("Validation Complete")
 
         except Exception:
@@ -407,10 +413,8 @@ elif page == "Model Evaluation":
                     st.video(v.read())
 import streamlit as st
 import os
-st.write("Project files:", os.listdir())
-st.write("Dataset exists:", os.path.exists("VehiclesDetectionDataset")) 
-
 import os
-st.write("Dataset folders:", os.listdir("VehiclesDetectionDataset"))
-st.write("Train folder:", os.listdir("VehiclesDetectionDataset/train"))
-st.write("Valid folder:", os.listdir("VehiclesDetectionDataset/valid"))
+
+st.write("Dataset exists:", os.path.exists("VehiclesDetectionDataset"))
+st.write("Dataset yaml exists:", os.path.exists("VehiclesDetectionDataset/dataset.yaml"))
+st.write("Train images:", os.listdir("VehiclesDetectionDataset/train/images")[:5])
