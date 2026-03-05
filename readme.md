@@ -1,136 +1,229 @@
-# 🚗 Vehicle Detection System using YOLOv8
+# 🚗 Vehicle Detection & Analytics Dashboard (YOLOv8 + Streamlit)
 
-A complete end-to-end Computer Vision project for **vehicle detection, analytics, and model evaluation** using **YOLOv8** and **Streamlit**.
+An interactive **Computer Vision dashboard** that detects vehicles from uploaded videos using **YOLOv8** and provides **analytics, visualizations, and model evaluation**.
 
----
-
-## 📌 Project Overview
-
-This project implements an intelligent vehicle detection system capable of:
-
-- Real-time vehicle detection
-- Multi-class vehicle classification
-- Video processing with FFmpeg
-- Interactive analytics dashboard
-- Model performance evaluation
-- Confusion matrix visualization
-
-Built using:
-
-- **YOLOv8 (Ultralytics)**
-- **PyTorch**
-- **Streamlit**
-- **OpenCV**
-- **Matplotlib**
-- **Pandas**
-- **FFmpeg**
+This project demonstrates how **deep learning models can be deployed as real-time analytics applications** using Streamlit.
 
 ---
 
-## 🚘 Classes Detected
+# 📌 Project Overview
 
-The model detects 5 vehicle categories:
+The system performs:
 
-- Ambulance
-- Bus
-- Car
-- Motorcycle
-- Truck
+* 🚗 Vehicle detection from uploaded videos
+* 🎯 Object classification using YOLOv8
+* 📊 Interactive analytics dashboard
+* 📈 Model evaluation metrics
+* 🎥 Annotated video output
+* 📥 Downloadable reports
 
----
-
-## 📊 Application Features
-
-### 🔹 1. Detection Page
-- Upload traffic video
-- Adjustable confidence threshold slider
-- Browser-compatible processed output
-- Automatic vehicle counting
-- Annotated video output
+This project simulates a **Smart Traffic Monitoring System** used in intelligent transportation and smart city solutions.
 
 ---
 
-### 🔹 2. Analytics Dashboard
-- Total vehicle count
-- Most frequent vehicle type
-- Interactive bar chart
-- Pie chart distribution
-- Downloadable CSV report
+# 🧠 Model
+
+* Model: **YOLOv8**
+* Framework: **PyTorch**
+* Classes detected:
+
+  * Ambulance
+  * Bus
+  * Car
+  * Motorcycle
+  * Truck
 
 ---
 
-### 🔹 3. Model Evaluation Dashboard
-- mAP@0.5
-- mAP@0.5:0.95
-- Precision
-- Recall
-- F1 Score
-- Per-class performance table
-- Confusion matrix visualization
-- mAP per class bar chart
-- PR Curve & F1 Curve
-- Downloadable evaluation report
+# ⚙️ Features
+
+### 🎥 Vehicle Detection
+
+* Upload a traffic video
+* Detect vehicles using YOLOv8
+* Display annotated video with bounding boxes
+* Download annotated video
+
+### 📊 Analytics Dashboard
+
+* Vehicle count summary
+* Interactive bar charts
+* Vehicle distribution pie chart
+* Detection trends
+* Traffic insights
+* CSV report download
+
+### 📈 Model Evaluation
+
+* mAP@0.5
+* mAP@0.5:0.95
+* Precision
+* Recall
+* Confusion Matrix
+* Precision–Recall Curve
+* Per-class performance metrics
 
 ---
 
-## 🗂 Project Structure
-Computer_Vision_Project/
+# 🖥️ Application Interface
+
+## Home Page
+
+Overview of the system and project information.
+
+## Detection Page
+
+Upload videos and run the vehicle detection model.
+
+## Analytics Dashboard
+
+Interactive charts showing vehicle distribution and traffic insights.
+
+## Model Evaluation
+
+Displays validation metrics and model performance.
+
+---
+
+# 📊 Example Analytics
+
+The dashboard generates insights such as:
+
+* Total vehicles detected
+* Most frequent vehicle type
+* Vehicle distribution charts
+* Traffic behavior insights
+
+---
+
+# 🗂️ Project Structure
+
+```
+YOLOv8_object_detection_project
 │
-├── app.py # Streamlit application
-├── train.py # Model training script
-├── inference.py # Inference script (image/video/webcam)
-├── best.pt # Trained model weights
-├── data.yaml # Dataset configuration
-├── requirements.txt # Dependencies
-├── README.md
+├── app.py
+├── train.py
+├── inference.py
+├── requirements.txt
+├── packages.txt
+├── runtime.txt
+├── best.pt
+├── yolov8n.pt
 │
-├── VehiclesDetectionDataset/
-│ ├── train/
-│ ├── valid/
-│ └── test/
+├── VehiclesDetectionDataset
+│   ├── train
+│   ├── valid
+│   ├── test
+│   └── dataset.yaml
 │
-├── uploads/ # Uploaded videos
-└── runs/ # YOLO output folders
-
+├── uploads
+├── runs
+└── README.md
+```
 
 ---
 
-## ⚙ Installation Guide
+# 🚀 Installation
 
-### 1️⃣ Clone the Repository
+### 1️⃣ Clone the repository
 
-```bash
-git clone https://github.com/priyankak18102001/YOLOv8_object_detection_project
-cd Computer_Vision_Project
+```
+git clone https://github.com/priyankak18102001/YOLOv8_object_detection_project.git
+```
 
-python -m venv venv
-venv\Scripts\activate   # Windows
+### 2️⃣ Navigate to the project folder
 
+```
+cd YOLOv8_object_detection_project
+```
+
+### 3️⃣ Install dependencies
+
+```
 pip install -r requirements.txt
+```
 
-4️⃣ Install FFmpeg (Required for Video Processing)
+---
 
-Download from:
+# ▶️ Run the Application
 
-👉 https://www.gyan.dev/ffmpeg/builds/
-
-Add FFmpeg to your system PATH.
-
-Verify installation:
-ffmpeg -version
-
-Run the Streamlit Application
+```
 streamlit run app.py
+```
 
-Model Training (Optional)
+Then open the local URL shown in the terminal.
 
-To retrain the model:
+---
 
-python train.py
+# 📦 Requirements
 
-Trained weights will be saved in:
+Main libraries used:
 
-runs/detect/train*/weights/best.pt
+* streamlit
+* ultralytics
+* torch
+* opencv-python
+* pandas
+* matplotlib
+* plotly
+* numpy
+
+---
+
+# 📊 Model Performance
+
+Example evaluation metrics:
+
+| Metric       | Score |
+| ------------ | ----- |
+| mAP@0.5      | 0.629 |
+| mAP@0.5:0.95 | 0.485 |
+| Precision    | 0.737 |
+| Recall       | 0.548 |
+
+---
+
+# 💡 Applications
+
+This system can be used for:
+
+* Smart traffic monitoring
+* Vehicle counting systems
+* Smart city analytics
+* Road traffic analysis
+* Surveillance systems
+
+---
+
+# 🧑‍💻 Author
+
+**Priyanka Kumawat**
+
+Data Science & Computer Vision Enthusiast
+
+GitHub:
+https://github.com/priyankak18102001
+
+LinkedIn:
+https://www.linkedin.com/in/priyanka-kumawat-7177092a3
+
+---
+
+# ⭐ Future Improvements
+
+* Real-time CCTV vehicle detection
+* Vehicle speed estimation
+* Traffic congestion analysis
+* Live camera integration
+* Vehicle heatmap visualization
+
+---
+
+# 📜 License
+
+This project is for educational and research purposes.
+
+t
 📈 Evaluation Metrics Explained
 Metric	Description
 mAP@0.5	Detection accuracy at IoU threshold 0.5
