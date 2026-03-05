@@ -195,7 +195,7 @@ elif page == "Detection":
                             "x": x_center,
                             "y": y_center
                      })
-            st.session_state["heatmap"] = heatmap_points
+            st.session_state["heatmap_points"] = heatmap_points
           
 
 
@@ -291,7 +291,7 @@ elif page == "Analytics":
             st.plotly_chart(fig_trend, use_container_width=True)
 
         # ---------------- HEATMAP ----------------
-        if "heatmap" in st.session_state:
+        if "heatmap_points" in st.session_state:
 
             st.subheader("🔥 Vehicle Position Heatmap")
 
