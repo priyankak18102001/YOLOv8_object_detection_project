@@ -184,7 +184,23 @@ elif page == "Detection":
                       "Time": time.strftime("%H:%M:%S")
                    })
 
-            st.session_state["vehicle_log"] = vehicle_log  
+            st.session_state["vehicle_log"] = vehicle_log 
+            heatmap_points = []
+
+            for r in results:
+                 for box in r.boxes:
+                     x_center = float(box.xywh[0][0])
+                     y_center = float(box.xywh[0][1])
+                       heatmap_points.append({
+                            "x": x_center,
+                            "y": y_center
+                       })
+            st.session_state["heatmap"] = heatmap_points
+          
+
+
+
+
 
 # -----------------------------
 # ANALYTICS PAGE
