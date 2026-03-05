@@ -5,6 +5,24 @@ import os
 import subprocess
 import pandas as pd
 import matplotlib.pyplot as plt
+import gdown
+import zipfile 
+
+Dataset_path = "VehiclesDetectionDataset"
+def download_dataset():
+    if not os.path.exists(Dataset_path):
+
+        url = "https://drive.google.com/drive/folders/1utdLnY8JVhPdGtr8DCpqcoJMJtkh2_Pc?usp=sharing"
+        output = "dataset.zip"
+
+        gdown.download(url, output, quiet=False)
+
+        with zipfile.ZipFile(output, 'r') as zip_ref:
+            zip_ref.extractall(".")
+
+        os.remove(output)
+
+download_dataset()
 
 st.set_page_config(page_title="Vehicle Detection Dashboard", layout="wide")
 
