@@ -6,7 +6,8 @@ import subprocess
 import pandas as pd
 import matplotlib.pyplot as plt
 import gdown
-import zipfile 
+import zipfile
+import plotly.express as px
 
 Dataset_path = "VehiclesDetectionDataset"
 def download_dataset():
@@ -154,6 +155,36 @@ elif page == "Detection":
 
             else:
                 st.error("No output video found.")
+            vehicle_log = []
+
+            for r in results:
+               for box in r.boxes:
+                   cls_id = int(box.cls)
+                   cls_name = model.names[cls_id]
+                   conf = float(box.conf)
+
+                   vehicle_log.append({
+                       "Vehicle": cls_name,
+                        "Confidence": conf
+                    })
+
+            st.session_state["vehicle_log"] = vehicle_log  
+
+            import time
+
+            vehicle_log = []
+
+            for r in results:
+               for box in r.boxes:
+                  cls_id = int(box.cls)
+                  cls_name = model.names[cls_id]
+
+                  vehicle_log.append({
+                     "Vehicle": cls_name,
+                      "Time": time.strftime("%H:%M:%S")
+                   })
+
+            st.session_state["vehicle_log"] = vehicle_log  
 
 # -----------------------------
 # ANALYTICS PAGE
@@ -172,34 +203,64 @@ elif page == "Analytics":
 
         # -------- METRICS --------
         col1, col2, col3 = st.columns(3)
-        col1.metric("Total Vehicles", total_vehicles)
-        col2.metric("Vehicle Types Detected", unique_classes)
-        col3.metric("Most Frequent", most_common)
 
+        col1.metric("🚗 Total Vehicles", total_vehicles)
+        col2.metric("📦 Vehicle Types", unique_classes)
+        col3.metric("🔥 Most Frequent", most_common)
+
+        # -------- DATAFRAME --------
         df = pd.DataFrame({
             "Vehicle Type": list(counts.keys()),
             "Count": list(counts.values())
         })
 
-        st.subheader("Vehicle Count Table")
-        st.dataframe(df)
+        st.subheader("📋 Vehicle Count Table")
+        st.dataframe(df, use_container_width=True)
 
-        # -------- BAR CHART --------
-        st.subheader("Bar Chart")
-        st.bar_chart(df.set_index("Vehicle Type"))
+        # -------- INTERACTIVE BAR CHART --------
+        st.subheader("📊 Vehicle Count by Type")
+
+        fig_bar = px.bar(
+            df,
+            x="Vehicle Type",
+            y="Count",
+            color="Vehicle Type",
+            text="Count",
+            title="Vehicle Distribution"
+        )
+
+        st.plotly_chart(fig_bar, use_container_width=True)
 
         # -------- PIE CHART --------
-        st.subheader("Vehicle Distribution (Pie Chart)")
+        st.subheader("🥧 Vehicle Share")
 
-        fig, ax = plt.subplots(figsize = (6,4))
-        ax.pie(df["Count"], labels=df["Vehicle Type"], autopct="%1.1f%%")
-        ax.set_title("Vehicle Distribution")
-        st.pyplot(fig)
+        fig_pie = px.pie(
+            df,
+            names="Vehicle Type",
+            values="Count",
+            title="Vehicle Percentage"
+        )
 
-        # -------- DOWNLOAD CSV --------
+        st.plotly_chart(fig_pie, use_container_width=True)
+
+        # -------- TRAFFIC INSIGHTS --------
+        st.subheader("🧠 Traffic Insights")
+
+        st.info(f"""
+        🚗 **Total vehicles detected:** {total_vehicles}
+
+        📊 **Most frequent vehicle:** {most_common}
+
+        🏙 This traffic pattern suggests that **{most_common}** dominates the road activity.
+        """)
+
+        # -------- DOWNLOAD REPORT --------
+        st.subheader("📥 Export Report")
+
         csv = df.to_csv(index=False).encode("utf-8")
+
         st.download_button(
-            "Download Report as CSV",
+            "⬇ Download Vehicle Report",
             csv,
             "vehicle_report.csv",
             "text/csv"
