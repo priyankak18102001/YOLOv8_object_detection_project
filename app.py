@@ -191,10 +191,10 @@ elif page == "Detection":
                  for box in r.boxes:
                      x_center = float(box.xywh[0][0])
                      y_center = float(box.xywh[0][1])
-                       heatmap_points.append({
+                     heatmap_points.append({
                             "x": x_center,
                             "y": y_center
-                       })
+                     })
             st.session_state["heatmap"] = heatmap_points
           
 
