@@ -254,6 +254,44 @@ elif page == "Analytics":
         🏙 This traffic pattern suggests that **{most_common}** dominates the road activity.
         """)
 
+        # ---------------- TREND GRAPH ----------------
+        if "vehicle_log" in st.session_state:
+
+            df_log = pd.DataFrame(st.session_state["vehicle_log"])
+
+            st.subheader("📈 Vehicle Detection Trend")
+
+            trend = df_log.groupby(["Time", "Vehicle"]).size().reset_index(name="Count")
+
+            fig_trend = px.line(
+                trend,
+                x="Time",
+                y="Count",
+                color="Vehicle",
+                markers=True,
+                title="Vehicle Detection Trend Over Time"
+            )
+
+            st.plotly_chart(fig_trend, use_container_width=True)
+
+        # ---------------- HEATMAP ----------------
+        if "heatmap" in st.session_state:
+
+            st.subheader("🔥 Vehicle Position Heatmap")
+
+            df_heat = pd.DataFrame(st.session_state["heatmap"])
+
+            fig_heat = px.density_heatmap(
+                df_heat,
+                x="x",
+                y="y",
+                nbinsx=30,
+                nbinsy=30,
+                title="Vehicle Detection Heatmap"
+            )
+
+            st.plotly_chart(fig_heat, use_container_width=True)
+
         # -------- DOWNLOAD REPORT --------
         st.subheader("📥 Export Report")
 
