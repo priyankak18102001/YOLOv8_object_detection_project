@@ -411,10 +411,3 @@ elif page == "Model Evaluation":
                 video_path = os.path.join(latest_predict, video_files[0])
                 with open(video_path, "rb") as v:
                     st.video(v.read())
-import streamlit as st
-import os
-import os
-
-st.write("Dataset exists:", os.path.exists("VehiclesDetectionDataset"))
-st.write("Dataset yaml exists:", os.path.exists("VehiclesDetectionDataset/dataset.yaml"))
-st.write("Train images:", os.listdir("VehiclesDetectionDataset/train/images")[:5])
