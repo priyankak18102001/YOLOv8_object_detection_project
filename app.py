@@ -295,7 +295,7 @@ elif page == "Analytics":
 
             st.subheader("🔥 Vehicle Position Heatmap")
 
-            df_heat = pd.DataFrame(st.session_state["heatmap"])
+            df_heat = pd.DataFrame(st.session_state["heatmap_points"])
 
             fig_heat = px.density_heatmap(
                 df_heat,
