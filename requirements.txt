@@ -7,3 +7,4 @@ pandas
 matplotlib
 imageio
 imageio-ffmpeg
+gdown
